@@ -18,6 +18,7 @@ public:
   double Kd;
 
   //Previous data
+  double max_speed;
   double prev_timestamp;
   double prev_cte;
 

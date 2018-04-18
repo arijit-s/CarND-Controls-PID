@@ -35,8 +35,15 @@ int main()
   PID pid;
   PID pid_speed;
   // TODO: Initialize the pid variable.
-  pid.Init(0.1,0.01,0.5);
-  pid_speed.Init(0.1,0.002,0.0);  
+  float Kp_ = 0.1;      //atof(argv[1]);
+  float Ki_ = 0.006;    //atof(argv[2]);
+  float Kd_ = 0.5;      //atof(argv[3]);
+  pid.Init(Kp_,Ki_,Kd_);
+  pid_speed.Init(0.1,0.002,0.0);
+  pid_speed.max_speed = 10;
+
+   //std::cout << "Kp_:" <<Kp_<< "!Ki_:" << Ki_<< "!Kd_: "<< Kd_<<std::endl;
+   //std::cout << "CTE:Steering:Throttle:Speed:"<<std::endl;
   
 
   h.onMessage([&pid, &pid_speed](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
@@ -53,7 +60,7 @@ int main()
           // j[1] is the data JSON object
           double cte = std::stod(j[1]["cte"].get<std::string>());
           double speed = std::stod(j[1]["speed"].get<std::string>());
-          double angle = std::stod(j[1]["steering_angle"].get<std::string>());
+          //double angle = std::stod(j[1]["steering_angle"].get<std::string>());
           double steer_value;
           /*
           * TODO: Calcuate steering value here, remember the steering value is
@@ -67,29 +74,19 @@ int main()
           steer_value = pid.TotalError();
 
           //PID Speed
-          pid_speed.UpdateError(speed - 10);
+          pid_speed.UpdateError(speed - pid_speed.max_speed);
           limit_throttle = pid_speed.TotalError();
           
           // DEBUG
-          ////std::cout << "CTE: " << cte << " Steering Value: " << steer_value<< std::endl;
+          std::cout << "CTE: " << cte << " Steering Value: " << steer_value<< std::endl;
           ////std::cout << "Speed: " <<speed<< "Throttle: " << limit_throttle << std::endl;
-          //limit_throttle = .7 - 3*fabs(steer_value);
-          std::cout << "CTE: " <<cte<< " Steering:" << steer_value<< "Throttle: " << limit_throttle 
-          
-                  << "Speed: " <<speed<< std::endl;
-          // if(speed>=5){
-          //     limit_throttle = 0.0;
-          // }
-          // else{
-          //   limit_throttle = 0.3;
-          // }
-
+          //std::cout << "CTE: " <<cte<< "!Steering:" << steer_value<< "!Throttle: " << limit_throttle<< "!Speed: " <<speed<< std::endl;
           
           json msgJson;
           msgJson["steering_angle"] = steer_value;
           msgJson["throttle"] = limit_throttle;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
-          ////std::cout << msg << std::endl;
+          std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }
       } else {
