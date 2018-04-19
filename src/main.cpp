@@ -31,15 +31,17 @@ std::string hasData(std::string s) {
 int main()
 {
   uWS::Hub h;
-
+  //PID Controller for steering angle
   PID pid;
+  //PID Controller for Speed
   PID pid_speed;
   // TODO: Initialize the pid variable.
   float Kp_ = 0.1;      //atof(argv[1]);
-  float Ki_ = 0.006;    //atof(argv[2]);
+  float Ki_ = 0.004;    //atof(argv[2]);
   float Kd_ = 0.5;      //atof(argv[3]);
   pid.Init(Kp_,Ki_,Kd_);
   pid_speed.Init(0.1,0.002,0.0);
+  //Limiting car speed to 10 mph.
   pid_speed.max_speed = 10;
 
    //std::cout << "Kp_:" <<Kp_<< "!Ki_:" << Ki_<< "!Kd_: "<< Kd_<<std::endl;
