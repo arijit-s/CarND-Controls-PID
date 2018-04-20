@@ -40,9 +40,9 @@ int main()
   float Ki_ = 0.004;    //atof(argv[2]);
   float Kd_ = 0.5;      //atof(argv[3]);
   pid.Init(Kp_,Ki_,Kd_);
-  pid_speed.Init(0.1,0.002,0.0);
+  pid_speed.Init(0.1,0.0,0.5);
   //Limiting car speed to 10 mph.
-  pid_speed.max_speed = 10;
+  pid_speed.max_speed = 30;
 
    //std::cout << "Kp_:" <<Kp_<< "!Ki_:" << Ki_<< "!Kd_: "<< Kd_<<std::endl;
    //std::cout << "CTE:Steering:Throttle:Speed:"<<std::endl;
@@ -80,7 +80,7 @@ int main()
           limit_throttle = pid_speed.TotalError();
           
           // DEBUG
-          std::cout << "CTE: " << cte << " Steering Value: " << steer_value<< std::endl;
+          ////std::cout << "CTE: " << cte << " Steering Value: " << steer_value<< std::endl;
           ////std::cout << "Speed: " <<speed<< "Throttle: " << limit_throttle << std::endl;
           //std::cout << "CTE: " <<cte<< "!Steering:" << steer_value<< "!Throttle: " << limit_throttle<< "!Speed: " <<speed<< std::endl;
           

@@ -6,17 +6,14 @@
 
 ## Describe the effect each of the P, I, D components had in your implementation.
 
-The simulator returns the distance between the car and center of the road. In our project we take that as the cte(Cross Track Error) and using PID controller we are trying to minimize it by controlling the steering angle. If the CTE is high we steer stiff, if it is low we steer low.
+The simulator returns the distance between the car and center of the road. In our project we take that as the cte(Cross Track Error) and using PID controller we are trying to minimize it by controlling the steering angle. If the CTE is high we steer high, if it is low we steer low.
 
 The P component is the most significant part in PID Controller. It causes the car to steer proportional (and opposite) to the car's distance from the lane center (which is the CTE) - if the car is far to the right it steers hard to the left, if it's slightly to the left it steers slightly to the right.
 
-The D component helps the car to converge to the center more smoothly. For a little high value of P, there will be possibility for the car to overshoot the center line 
+The I component helps to rectify any bias which might prevent the car to come to the center line. It may occur of the car steering have any manufacturing error and it always have some steering angle even though the steering is straight.
 
-counteracts the P component's tendency to ring and overshoot the center line. A properly tuned D parameter will cause the car to approach the center line smoothly without ringing.
+The D component helps the car to converge to the center more smoothly. For a little high value of P, there will be possibility for the car to overshoot the center line. Increasing the D value will help the car to come in center smoothly instead of oscilating.
 
-The I, or "integral", component counteracts a bias in the CTE which prevents the P-D controller from reaching the center line. This bias can take several forms, such as a steering drift (as in the Control unit lessons), but I believe that in this particular implementation the I component particularly serves to reduce the CTE around curves.
-
-The final PID controller implementation performed much like in the following video (although, the controller performance suffered due to the screen recording consuming computation resources away from the websocket).
 
 ## Describe how the final hyperparameters were chosen.
 
@@ -26,13 +23,11 @@ At first I started PID Controller with all the parameters set to zeroes and incr
 
 To converge it smoother then I started expirementing with the value of Kd and Ki. After little bit tweaking I came up with a value for Kd = 0.5 and Ki = 0.004.
 
-
-
 When I run the code, the car was running fine at low speed, but going out of the car at higher speed. I found out it was the issue with my system as the processing speed is very low. So I implemented another PID Control to control the speed of the car using throttle. This was I limited the maximum speed of the car at 10 mph.
 
+Later I tried in different system at maximum speed of 30mph and 40 mph and the car was able to complete the track successfully.
 
-
-
+I have recorded a video, which can be found in the main directory. filename = "pid_control_car_30mph.mp4"
 ---
 
 # CarND-Controls-PID
